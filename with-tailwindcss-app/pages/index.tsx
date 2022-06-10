@@ -4,41 +4,32 @@ import Image from 'next/image'
 
 const Home: NextPage = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div className="flex flex-col items-center justify-center min-h-screen ">
       <Head>
         <title>Tá Pago?</title>
         <link rel="icon" href="/tapago.svg" />
       </Head>
-
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
+      
+      <main className="flex flex-col items-center justify-center flex-1 w-full text-center">
+        <Image 
+        src="/tapago.svg" 
+        alt="Tá Pago? Logo" 
+        width={150} 
+        height={150} 
+        />
+        <h1 className="text-18.75x font-mono px-20">
+          VERIFICADOR DE TRANSFERÊNCIAS/DEPÓSITOS
         </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
+        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 bg-orange-100 rounded-tl-xl rounded-tr-xl space-around sm:w-full">
+          
+          <div className='flex flex-col p-6 text-left'>
+            <label className='pb-2'>Número do comprovativo:</label>
+            <input className='p-3 w-96' placeholder='A0000001100100'></input>
+          </div>
 
           <a
             href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Learn &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -48,7 +39,7 @@ const Home: NextPage = () => {
 
           <a
             href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Examples &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -58,7 +49,7 @@ const Home: NextPage = () => {
 
           <a
             href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
+            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
           >
             <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
             <p className="mt-4 text-xl">
@@ -68,14 +59,14 @@ const Home: NextPage = () => {
         </div>
       </main>
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
+      <footer className="flex items-center justify-center w-full h-24 bg-orange-100 border-t">
         <a
           className="flex items-center justify-center gap-2"
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Feito por{' '}
           <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
         </a>
       </footer>
