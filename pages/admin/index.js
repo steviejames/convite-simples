@@ -1,16 +1,36 @@
 import { LockClosedIcon, CakeIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import { addGuest } from "../../services/firebase";
+import Toast from "../../src/components/Toast";
 export default function CreateGuest() {
   const [invitedBy, setInvitedBy] = useState("iverson");
   const [name, setName] = useState(String);
   const [phone, setPhone] = useState(String);
-
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+  });
+  function handleCloseNotification() {
+    setNotification({
+      message: "",
+      show: false,
+    });
+  }
   async function handleAddGuest(e) {
     e.preventDefault();
     if (!name || !phone) return alert("Preencha todos os campos!");
     const result = await addGuest(name, phone, invitedBy);
-    console.log(result);
+    if (result?.state == "success") {
+      setNotification({
+        message: "Adicionado com sucesso!",
+        show: true,
+      });
+    } else {
+      setNotification({
+        message: "Erro ao adicionar convidado. Tente novamente!",
+        show: true,
+      });
+    }
   }
   return (
     <>
@@ -29,7 +49,7 @@ export default function CreateGuest() {
                 href="/admin/list"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
-                Ver candidatos na lista
+                Ver lista de convidados
               </a>
             </p>
           </div>
@@ -49,6 +69,7 @@ export default function CreateGuest() {
                   id="name"
                   name="name"
                   type="name"
+                  onFocus={handleCloseNotification}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoComplete="name"
@@ -65,6 +86,7 @@ export default function CreateGuest() {
                   id="phone"
                   name="phone"
                   type="phone"
+                  onFocus={handleCloseNotification}
                   onChange={(e) => setPhone(e.target.value)}
                   value={phone}
                   autoComplete="phone"
@@ -137,6 +159,9 @@ export default function CreateGuest() {
           </form>
         </div>
       </div>
+      {notification.show && (
+        <Toast message={notification.message} close={handleCloseNotification} />
+      )}
     </>
   );
 }
