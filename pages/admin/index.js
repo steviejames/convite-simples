@@ -19,13 +19,20 @@ export default function CreateGuest() {
   async function handleAddGuest(e) {
     e.preventDefault();
     if (!name || !phone) return alert("Preencha todos os campos!");
-    const result = await addGuest(name, phone, invitedBy);
-    if (result?.state == "success") {
-      setNotification({
-        message: "Adicionado com sucesso!",
-        show: true,
-      });
-    } else {
+    try {
+      const result = await addGuest(name, phone, invitedBy);
+      if (result?.state == "success") {
+        setNotification({
+          message: "Adicionado com sucesso!",
+          show: true,
+        });
+      } else {
+        setNotification({
+          message: "Erro ao adicionar convidado. Tente novamente!",
+          show: true,
+        });
+      }
+    } catch (error) {
       setNotification({
         message: "Erro ao adicionar convidado. Tente novamente!",
         show: true,
@@ -147,12 +154,6 @@ export default function CreateGuest() {
                 type="submit"
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                  <LockClosedIcon
-                    className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                    aria-hidden="true"
-                  />
-                </span>
                 Adicionar á lista
               </button>
             </div>

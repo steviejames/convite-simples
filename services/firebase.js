@@ -58,24 +58,20 @@ export async function confirmPresence(number, option) {
 
 export async function addGuest(name, phone, invitedby) {
   const ref = doc(db, "convidados", `${phone}`);
-  try {
-    const docRef = await setDoc(
-      ref,
-      {
-        name,
-        invitedby,
-        phone,
-        confirmed: false,
-      },
-      { merge: true }
-    );
-    return {
-      state: "success",
-    };
-  } catch (error) {
-    console.log(error);
-    return { state: "failed" };
-  }
+
+  const docRef = await setDoc(
+    ref,
+    {
+      name,
+      invitedby,
+      phone,
+      confirmed: false,
+    },
+    { merge: true }
+  );
+  return {
+    state: "success",
+  };
 }
 
 export async function listGuests() {
