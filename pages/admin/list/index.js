@@ -1,5 +1,6 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { PaperClipIcon } from "@heroicons/react/solid";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { listGuests } from "../../../services/firebase";

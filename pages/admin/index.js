@@ -1,4 +1,5 @@
 import { LockClosedIcon, CakeIcon } from "@heroicons/react/solid";
+import Head from "next/head";
 import { useState } from "react";
 import { addGuest } from "../../services/firebase";
 import Toast from "../../src/components/Toast";
