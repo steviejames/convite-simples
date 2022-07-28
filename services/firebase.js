@@ -32,18 +32,19 @@ const db = getFirestore(app);
 export async function confirmPresence(number, option) {
   const docRef = doc(db, "convidados", `${number}`);
   const docSnap = await getDoc(docRef);
-  console.log(docSnap.exists());
-  console.log(docSnap.data());
+
   if (docSnap.exists()) {
-    setDoc(docRef, {
-      ...docSnap.data(),
-      confirmed: option == "confirm" ? true : false,
-    })
+    setDoc(
+      docRef,
+      {
+        confirmed: option == "confirm" ? true : false,
+      },
+      { mmerge: true }
+    )
       .then((resDoc) => {
         console.log("Atualizado");
         return {
           state: "success",
-          ...docRef.data(),
         };
       })
       .catch((error) => {
@@ -55,17 +56,36 @@ export async function confirmPresence(number, option) {
   }
 }
 
-export async function addGuest(name, phone) {
-  const docRef = await setDoc(collection(db, "convidados", `${phone}`), {
-    name,
-    phone,
-    confirmed: false,
-  });
-
-  return {
-    id: docRef.id,
-    ...doc.data(),
-  };
+export async function addGuest(name, phone, invitedby) {
+  const ref = doc(db, "convidados", `${phone}`);
+  try {
+    const docRef = await setDoc(
+      ref,
+      {
+        name,
+        invitedby,
+        phone,
+        confirmed: false,
+      },
+      { merge: true }
+    );
+    return {
+      state: "success",
+    };
+  } catch (error) {
+    console.log(error);
+    return { state: "failed" };
+  }
 }
 
-export async function listGuests() {}
+export async function listGuests() {
+  const q = query(collection(db, "convidados"));
+
+  const querySnapshot = await getDocs(q);
+  const docs = [];
+
+  querySnapshot.forEach((doc) => {
+    docs.push({ ...doc.data(), id: doc.id });
+  });
+  return docs;
+}

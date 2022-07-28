@@ -12,12 +12,7 @@ const Home: NextPage = () => {
     const result = await confirmPresence(923326989, "cancel");
     console.log(result);
   };
-  useEffect(() => {
-    (async () => {
-      const res = await addGuest("Mauro", 924559632);
-      console.log(res);
-    })();
-  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen ">
       <Head>
