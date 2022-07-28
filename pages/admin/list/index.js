@@ -15,6 +15,10 @@ export default function List() {
   }, []);
   return (
     <>
+      <Head>
+        <title>Convite simples - Convidados</title>
+        <link rel="icon" href="/tapago.svg" />
+      </Head>
       <div className="bg-white shadow overflow-hidden mb-5 sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
