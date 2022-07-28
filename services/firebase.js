@@ -4,10 +4,14 @@ import { getAnalytics } from "firebase/analytics";
 import {
   getFirestore,
   collection,
+  doc,
   query,
+  addDoc,
   where,
   getDocs,
-} from "firebase/firestore/lite";
+  getDoc,
+  setDoc,
+} from "firebase/firestore";
 //firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC6R1AWTBDI-ecIJaPs3a9yc6F2IZgi30c",
@@ -21,25 +25,47 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+//const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 //confirmation function
-export async function confirmPresence(number) {
-  const q = query(collection(db, "convidados"), where("phone", "==", number));
-  const querySnapshot = await getDocs(q);
-  const result = querySnapshot.forEach((doc) => {
-    return doc.data;
-  });
-
-  const res = {
-    ...result[0],
-  };
-  if (res) {
-    console.log(true);
-  } else {
-    console.log(false);
+export async function confirmPresence(number, option) {
+  const docRef = doc(db, "convidados", `${number}`);
+  const docSnap = await getDoc(docRef);
+  console.log(docSnap.exists());
+  console.log(docSnap.data());
+  if (docSnap.exists()) {
+    setDoc(docRef, {
+      ...docSnap.data(),
+      confirmed: option == "confirm" ? true : false,
+    })
+      .then((resDoc) => {
+        console.log("Atualizado");
+        return {
+          state: "success",
+          ...docRef.data(),
+        };
+      })
+      .catch((error) => {
+        console.log(error);
+        return {
+          state: "failed",
+        };
+      });
   }
 }
 
-export async function getGuests(id) {}
+export async function addGuest(name, phone) {
+  const docRef = await setDoc(collection(db, "convidados", `${phone}`), {
+    name,
+    phone,
+    confirmed: false,
+  });
+
+  return {
+    id: docRef.id,
+    ...doc.data(),
+  };
+}
+
+export async function listGuests() {}
