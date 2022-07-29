@@ -1,11 +1,12 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { LocationMarkerIcon } from "@heroicons/react/solid";
+import { LocationMarkerIcon, PhoneIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { confirmPresence, addGuest } from "../services/firebase";
 const Home: NextPage = () => {
   const [phone, setPhone] = useState(String);
+  const [err, setErr] = useState(String);
   const handlePhone = (number: string) => {
     const regex = new RegExp("^[0-9]*$");
 
@@ -14,9 +15,20 @@ const Home: NextPage = () => {
     } else {
     }
   };
-  const confirmation = async () => {
-    const result = await confirmPresence(923326989, "confirm");
+  const handleConfirmation = async () => {
+    if (!phone) {
+      return setErr(
+        "Insira o seu número de telefone para fazer a confirmação."
+      );
+    }
+    const result = await confirmPresence(phone, "confirm");
+
     console.log(result);
+    if (result) {
+      alert("Presença confirmada");
+    } else {
+      setErr("Infelizmente o número não consta da lista de convidados.");
+    }
   };
   const cancelConfirmation = async () => {
     const result = await confirmPresence(923326989, "cancel");
@@ -54,11 +66,18 @@ const Home: NextPage = () => {
           <input
             className="p-4 outline-none bg-transparent border-white border-x-transparent border-t-transparent placeholder:text-gray-300 border-b text-white"
             type="tel"
+            onFocus={() => setErr("")}
             onChange={(e) => handlePhone(e.target.value)}
             placeholder="Por favor insira o seu número de telefone"
             value={phone}
           />
-          <div className="border-2 hover:bg-white transition-all hover:text-black mt-8 p-5 mx-auto border-white flex flex-1 justify-center align-middle">
+          <span className="text-md text-left mt-8 text-red-400">
+            {err && `*${err}`}
+          </span>
+          <div
+            onClick={handleConfirmation}
+            className="border-2 hover:bg-white cursor-pointer transition-all hover:text-black mt-5 p-5 mx-auto border-white flex flex-1 justify-center align-middle"
+          >
             Confirmar Presença
           </div>
         </div>
@@ -78,6 +97,12 @@ const Home: NextPage = () => {
                 Abrir mapa
               </a>
             </p>
+          </div>
+          <div className="mt-16 flex items-start">
+            <span className="mr-2 h-10 w-10">
+              <PhoneIcon width={30} color="gray" />
+            </span>
+            <p className="text-justify  relative ">+244 923492663</p>
           </div>
         </div>
       </main>

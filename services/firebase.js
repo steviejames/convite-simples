@@ -32,27 +32,18 @@ const db = getFirestore(app);
 export async function confirmPresence(number, option) {
   const docRef = doc(db, "convidados", `${number}`);
   const docSnap = await getDoc(docRef);
-
+  let state;
   if (docSnap.exists()) {
-    setDoc(
+    const doc = await setDoc(
       docRef,
       {
         confirmed: option == "confirm" ? true : false,
       },
       { mmerge: true }
-    )
-      .then((resDoc) => {
-        console.log("Atualizado");
-        return {
-          state: "success",
-        };
-      })
-      .catch((error) => {
-        console.log(error);
-        return {
-          state: "failed",
-        };
-      });
+    );
+    return true;
+  } else {
+    return false;
   }
 }
 
