@@ -1,53 +1,43 @@
 import type { NextPage, GetServerSideProps } from "next";
 import Head from "next/head";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
-
+import { parseCookies, destroyCookie } from "nookies";
+import Router from "next/router";
 import { LocationMarkerIcon, PhoneIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { confirmPresence, addGuest } from "../services/firebase";
-import Router from "next/router";
+import { confirmPresence, getGuest } from "../services/firebase";
 const Home: NextPage = () => {
   const [phone, setPhone] = useState(String);
+  const [guest, setGuest] = useState(String);
   const [err, setErr] = useState(String);
-  const handlePhone = (number: string) => {
-    const regex = new RegExp("^[0-9]*$");
 
-    if (regex.test(number) !== false && number.length < 10) {
-      setPhone(number);
-    } else {
-    }
-  };
-  function verifyCookie() {
+  async function verifyCookie() {
     const { "convite-simples": cookie } = parseCookies();
     if (cookie) {
-      Router.push("/confirmed");
+      const guest = await getGuest(cookie);
+      setGuest(guest);
+      setPhone(guest?.phone);
+    } else {
+      Router.push("/");
     }
   }
   useEffect(() => {
     verifyCookie();
-  }, []);
+  }, [phone]);
 
-  const handleConfirmation = async () => {
-    if (!phone) {
-      return setErr(
-        "Insira o seu número de telefone para fazer a confirmação."
-      );
-    }
-    const result = await confirmPresence(phone, "confirm");
-
+  const cancelConfirmation = async () => {
+    const result = await confirmPresence(phone, "cancel");
     if (result) {
-      alert("Presença confirmada");
-      setCookie(null, "convite-simples", phone, {
-        maxAge: 30 * 24 * 60 * 60,
-        path: "/",
-      });
-      Router.push("/confirmed");
+      destroyCookie(null, "convite-simples");
+      alert(
+        "Presença Desconfirmada: Lamentamos que não possar celebrar conosco."
+      );
+      setPhone("");
+      return;
     } else {
-      return setErr("Infelizmente o número não consta da lista.");
+      return setErr("Erro ao cancelar. Tente mais tarde!");
     }
   };
-
   const location = {
     lat: "-8.9728236",
     long: "13.1502776",
@@ -67,9 +57,8 @@ const Home: NextPage = () => {
           <p>WA</p>
         </div>
         <h1 className="font-extrabold text-2xl shadow mt-4">PARTY</h1>
-        <div className="flex flex-col align-middle space-y-2 mt-6">
+        <div className="flex flex-col align-middle space-y-5 mt-6">
           <p className="uppercase font-semibold text-lg">31/06</p>
-          <p className="uppercase font-semibold text-md">18:00</p>
           <p className="uppercase font-semibold underline underline-offset-2 pt-6 text-lg">
             SAVE THE DATE!
           </p>
@@ -77,25 +66,15 @@ const Home: NextPage = () => {
           <p className="uppercase font-semibold text-lg">YOU ARE INVITED</p>
         </div>
         <div className="flex flex-col  mt-8">
-          <label htmlFor="phone" className="text-md  text-slate-500 text-left">
-            Número de telefone
-          </label>
-          <input
-            className="p-0 py-1 pt-2  outline-none bg-transparent border-white border-x-transparent border-t-transparent placeholder:text-gray-300 border-b text-white"
-            type="tel"
-            onFocus={() => setErr("")}
-            onChange={(e) => handlePhone(e.target.value)}
-            placeholder="Por favor insira o seu número de telefone"
-            value={phone}
-          />
-          <span className="text-md text-left mt-8 text-red-400">
-            {err && `*${err}`}
-          </span>
+          <p>
+            Olá {guest?.name}, obrigado por ter confirmado a sua presença. Nos
+            vemos na festa!!!
+          </p>
           <div
-            onClick={handleConfirmation}
-            className="border-2 lg:w-full hover:bg-white cursor-pointer transition-all hover:text-black mt-5 p-5 mx-auto border-white flex flex-1 justify-center align-middle"
+            onClick={cancelConfirmation}
+            className="border-2 lg:w-full w-1/2 hover:bg-red-600 cursor-pointer transition-all text-red-500 mt-5 p-5 mx-auto border-red-500 flex flex-1 justify-center align-middle"
           >
-            Confirmar Presença
+            Desconfirmar
           </div>
         </div>
         <div>

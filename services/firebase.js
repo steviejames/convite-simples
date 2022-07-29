@@ -6,7 +6,6 @@ import {
   collection,
   doc,
   query,
-  addDoc,
   where,
   getDocs,
   getDoc,
@@ -39,7 +38,7 @@ export async function confirmPresence(number, option) {
       {
         confirmed: option == "confirm" ? true : false,
       },
-      { mmerge: true }
+      { merge: true }
     );
     return true;
   } else {
@@ -75,4 +74,24 @@ export async function listGuests() {
     docs.push({ ...doc.data(), id: doc.id });
   });
   return docs;
+}
+
+export async function getGuest(phone) {
+  // const ref = doc(db, "convidados", `${phone}`);
+  // const doc = await getDoc(ref);
+  const q = query(collection(db, "convidados"), where("phone", "==", phone));
+  let docs = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    docs.push(doc.data());
+  });
+  const guest = docs.find(
+    (item, index, {}) => Number(item.phone) == Number(phone)
+  );
+  if (docs.length) {
+    return guest;
+  } else {
+    return null;
+  }
 }

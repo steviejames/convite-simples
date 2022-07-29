@@ -9,6 +9,7 @@
 }
 
 .main-container {
+  background-color: #1e1e1e;
   background-image: url("/party.png");
   background-repeat: no-repeat;
   background-size: cover;
