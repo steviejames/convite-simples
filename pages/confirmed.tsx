@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { confirmPresence, getGuest } from "../services/firebase";
 const Home: NextPage = () => {
   const [phone, setPhone] = useState(String);
-  const [guest, setGuest] = useState(String);
+  const [guest, setGuest] = useState(Object);
   const [err, setErr] = useState(String);
 
   async function verifyCookie() {
