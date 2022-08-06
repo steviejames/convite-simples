@@ -61,7 +61,9 @@ export default function List() {
                       {item.name}
                     </th>
                     <td className="py-4 px-6">{item.invitedby}</td>
-                    <td className="py-4 px-6">{item.confirmed}</td>
+                    <td className="py-4 px-6">
+                      {item.confirmed ? "Confirmado" : "Não confirmou"}
+                    </td>
 
                     <td className="py-4 px-6">{item.phone}</td>
                   </tr>
