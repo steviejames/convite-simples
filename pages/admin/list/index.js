@@ -40,6 +40,9 @@ export default function List() {
                   Convidado por
                 </th>
                 <th scope="col" className="py-3 px-6">
+                  Estado
+                </th>
+                <th scope="col" className="py-3 px-6">
                   Contato
                 </th>
               </tr>
@@ -58,6 +61,8 @@ export default function List() {
                       {item.name}
                     </th>
                     <td className="py-4 px-6">{item.invitedby}</td>
+                    <td className="py-4 px-6">{item.confirmed}</td>
+
                     <td className="py-4 px-6">{item.phone}</td>
                   </tr>
                 ))}
